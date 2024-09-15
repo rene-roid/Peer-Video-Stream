@@ -5,7 +5,7 @@ import path from 'path';
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    const videoPath = path.join(__dirname, '../../assets/video.mp4');
+    const videoPath = path.join(__dirname, '../../assets/video2.mp4');
     const stat = fs.statSync(videoPath);
     const fileSize = stat.size;
     const range = req.headers.range;
