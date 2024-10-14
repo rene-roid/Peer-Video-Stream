@@ -15,7 +15,6 @@ interface VideoPlayerProps {
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ sessionCode, isLeader, videoId }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [, setIsPlaying] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(1);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +33,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sessionCode, isLeader, videoI
 
   const debouncedPause = useRef(debounce(() => {
     if (videoRef.current && !isEnded) {
-      socket.emit('control', { sessionCode, action: 'pause', timestamp: videoRef.current.currentTime });
+      socket.emit('control', { sessionCode, action: 'pause' });
       console.log('Pause command sent');
     }
   }, 100));
@@ -76,6 +75,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sessionCode, isLeader, videoI
 
     return () => {
       if (videoRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         videoRef.current.removeEventListener('timeupdate', updateTime);
       }
     };
@@ -89,16 +89,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sessionCode, isLeader, videoI
 
   const handleFullScreenToggle = () => {
     if (videoRef.current) {
-      if (!isFullScreen) {
-        if (videoRef.current.requestFullscreen) {
-          videoRef.current.requestFullscreen();
-        }
-        setIsFullScreen(true);
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-        setIsFullScreen(false);
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
       }
     }
   };
@@ -125,7 +117,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sessionCode, isLeader, videoI
       {error ? (
         <div className="error-message">{error}</div>
       ) : (
-        <div>
+        <>
           <video
             ref={videoRef}
             controls={isLeader}
@@ -133,7 +125,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sessionCode, isLeader, videoI
             onPause={isLeader ? handlePause : undefined}
             onError={handleError}
             onEnded={handleEnded}
-            className={`video-element ${isFullScreen ? 'fullscreen' : ''}`}
+            className="video-element"
           >
             {videoId && (
               <source src={`${API_URL}/api/v1/stream/video/${videoId}`} type="video/mp4" />
@@ -141,28 +133,43 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sessionCode, isLeader, videoI
             Your browser does not support the video tag.
           </video>
           <div className="controls-container">
-            <button className="fullscreen-toggle" onClick={handleFullScreenToggle}>
-              {isFullScreen ? 'Exit Full Screen' : 'Full Screen'}
-            </button>
-            <p className="current-time">Current Time: {currentTime.toFixed(2)}s</p>
-            <label className="volume-label">
-              Volume:
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={volume}
-                onChange={handleVolumeChange}
-                className="volume-slider"
-              />
-            </label>
+            <div className="video-player-title">
+              <div className="session-code-container">
+                <span>Session code: {sessionCode}</span>
+                <button
+                  className="copy-button"
+                  onClick={() =>
+                    navigator.clipboard.writeText(sessionCode ?? '').then(() => console.log('Copied!'))
+                  }
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+            <div className="video-controls">
+              <button className="fullscreen-toggle" onClick={handleFullScreenToggle}>
+                Full Screen
+              </button>
+              <p className="current-time">Current Time: {currentTime.toFixed(2)}s</p>
+              <label className="volume-label">
+                Volume:
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value={volume}
+                  onChange={handleVolumeChange}
+                  className="volume-slider"
+                />
+              </label>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
-  
+
 };
 
 export default VideoPlayer;

@@ -83,12 +83,21 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 .video-element {
+  width: auto;
   width: 100%;
-  max-width: 900px;
+  max-height: 85vh;
   border-radius: 8px;
+
+  background-color: #000;
+}
+
+.video-player-title {
+  font-size: 1.5rem;
+  width: 100%;
 }
 
 .fullscreen {
@@ -97,6 +106,8 @@ body {
 
 .controls-container {
   margin-top: 10px;
+  width: 100%;
+  display: flex;
 }
 
 .fullscreen-toggle {
@@ -167,4 +178,75 @@ body {
 .error-message {
   color: red;
   font-weight: bold;
+}
+
+.controls-container {
+  padding: 10px;
+}
+
+.video-player-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.session-code-container {
+  display: flex;
+  align-items: center;
+}
+
+.copy-button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007BFF;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.copy-button:hover {
+  background-color: #0056b3;
+}
+
+.video-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.fullscreen-toggle {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007BFF;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.fullscreen-toggle:hover {
+  background-color: #0056b3;
+}
+
+.current-time {
+  margin: 0 10px;
+  font-size: 14px;
+}
+
+.volume-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.volume-slider {
+  margin-left: 10px;
 }

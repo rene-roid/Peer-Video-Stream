@@ -72,14 +72,6 @@ const Session: React.FC = () => {
   if (sessionCode) {
     return (
       <div>
-        Session code: {sessionCode}
-        <button
-          onClick={() =>
-            navigator.clipboard.writeText(sessionCode ?? '').then(() => console.log('Copied!'))
-          }
-        >
-          Copy
-        </button>
         <VideoPlayer sessionCode={sessionCode} isLeader={isLeader} videoId={selectedVideoId} />
       </div>
     );
@@ -89,6 +81,7 @@ const Session: React.FC = () => {
     <div className="session-container">
       {sessionCode ? (
         <div className="session-info">
+          <VideoPlayer sessionCode={sessionCode} isLeader={isLeader} videoId={selectedVideoId} />
           <p className="session-code">Session code: {sessionCode}</p>
           <button
             className="copy-button"
@@ -98,7 +91,6 @@ const Session: React.FC = () => {
           >
             Copy
           </button>
-          <VideoPlayer sessionCode={sessionCode} isLeader={isLeader} videoId={selectedVideoId} />
         </div>
       ) : (
         <div className="session-setup">
@@ -113,14 +105,16 @@ const Session: React.FC = () => {
           </select>
   
           <button className="create-session-button" onClick={createSession}>Create Session</button>
-          <input
-            className="session-code-input"
-            type="text"
-            value={inputCode}
-            onChange={(e) => setInputCode(e.target.value)}
-            placeholder="Enter session code"
-          />
-          <button className="join-session-button" onClick={joinSession}>Join Session</button>
+          <div className="session-code-container">
+            <input
+              className="session-code-input"
+              type="text"
+              value={inputCode}
+              onChange={(e) => setInputCode(e.target.value)}
+              placeholder="Enter session code"
+            />
+            <button className="join-session-button" onClick={joinSession}>Join Session</button>
+          </div>
         </div>
       )}
     </div>
